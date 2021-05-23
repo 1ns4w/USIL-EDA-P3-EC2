@@ -23,7 +23,8 @@ int main()
   cout << "Inorder ..." << endl;
   bst.Inorder();
 
+  cout << "Ascendente iterador ..." << endl;
   CBinaryTree<T1>::Iterator iter = bst.begin();
-  for(; iter != bst.end(); iter++)
+  for(; !iter.empty(); ++iter)
     cout << *iter << endl;
 }

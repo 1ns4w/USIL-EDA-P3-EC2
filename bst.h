@@ -26,8 +26,8 @@ public:
     class Iterator
     {
           Node *m_pNode;
-          const Node *getNode() { return m_pNode;  }
-          void setNode(const Node *pNode) { m_pNode = pNode;  }
+          Node *getNode() { return m_pNode;  }
+          void setNode(Node *pNode) { m_pNode = pNode;  }
       public:    
           Iterator(Node *pNode=nullptr): m_pNode(pNode) {};
           Iterator(Iterator &other) : m_pNode(other.getNode())  {}
@@ -35,6 +35,10 @@ public:
           Iterator operator++();
           bool operator==(Iterator &other)  {return getNode() == other.getNode(); }
           bool operator!=(Iterator &other)  {return !(*this == other); }
+
+          bool empty() {
+            return getNode() == nullptr;
+          }
     };
     Iterator begin()
     {
