@@ -7,6 +7,8 @@
 
 using namespace std;
 
+//Diego Maizo y Kevin De Lama realizaron este trabajo
+
 template <typename T>
 class CBinaryTree
 {
@@ -26,17 +28,19 @@ public:
     class Iterator
     {
           Node *m_pNode;
-          const Node *getNode() { return m_pNode;  }
-          void setNode(const Node *pNode) { m_pNode = pNode;  }
+          Node *getNode() { return m_pNode;  }
+          void setNode(Node *pNode) { m_pNode = pNode;  }
       public:    
           Iterator(Node *pNode=nullptr): m_pNode(pNode) {};
           Iterator(Iterator &other) : m_pNode(other.getNode())  {}
           T operator *() { assert(getNode() != nullptr); return getNode()->getData(); }
           Iterator operator++();
+          Iterator operator--();
           bool operator==(Iterator &other)  {return getNode() == other.getNode(); }
-          bool operator!=(Iterator &other)  {return !(*this == other); }
+          bool operator!=(Iterator &other)  {return getNode()!=other.getNode(); }
     };
-    Iterator begin()
+
+    Iterator begin()//10
     {
       Node *pNode = getRoot();
       while(pNode->m_pChild[0])
@@ -44,22 +48,33 @@ public:
       return Iterator(pNode);
     }
     Iterator end()  { return Iterator(nullptr); }
+
+    Iterator beginroot()
+    {
+      Node *pNode = getRoot();
+      return Iterator(pNode);
+    }   
+
+    Iterator lbegin(){
+      Node* pNode =getRoot();
+      pNode=pNode->m_pChild[1];
+      return Iterator(pNode);
+    }
+
+    Iterator derlbegin(){
+      Node *pNode = getRoot();
+      pNode=pNode->m_pChild[0];
+      while(pNode->m_pChild[0])
+        pNode = pNode->m_pChild[1];
+      return Iterator(pNode);
+    }
+    
 private:
     Node *m_pRoot = nullptr;
     Node *getRoot() { return m_pRoot; }
 public:
     CBinaryTree() {}
-    void insert_old(const T &dato) //Maizo agregado const
-    {   
-        Node **ppNode = &m_pRoot;
-        while(*ppNode != nullptr)      
-        { if(dato > (*ppNode)->getData())
-            ppNode = &ppNode->m_pChild[1];
-          else
-            ppNode = &ppNode->m_pChild[0];
-        }
-        *ppNode = new Node(dato);
-    }
+    
     void insert(const T &dato) //Maizo agregado const
     {   internal_insert(m_pRoot, nullptr, dato);   }
 
@@ -138,19 +153,39 @@ typename CBinaryTree<T>::Iterator CBinaryTree<T>::Iterator::operator++()
         pNode = pNode->m_pChild[0];
       setNode(pNode);
       return *this;
-    }
-    Node *pParent = pNode->getParent();
-    while(pParent && pParent->m_pChild[1] == pNode) // Mientras venga por el lado derecho => subir
-    {
-      pNode = pParent;
-      pParent = pParent->getParent();
-    }
-    if(pParent && pParent->m_pChild[0] == pNode) // Soy el hijo izquierdo
-    { setNode(pParent);
-      return *this;
-    }
-    setNode(nullptr);
-    return *this;
+    } else {
+      Node *pParent = pNode->getParent();
+      while(pParent && pParent->m_pChild[1] == pNode) // Mientras venga por el lado derecho => subir
+      { pNode = pParent;
+        pParent = pParent->getParent();    }
+      if(pParent && pParent->m_pChild[0] == pNode) // Soy el hijo izquierdo
+      { setNode(pParent);
+      return *this; }
+     setNode(nullptr);
+    return *this;}
 }
 
-#endif //Maizo Diego  
+template <typename T>
+typename CBinaryTree<T>::Iterator CBinaryTree<T>::Iterator::operator--()
+{
+  //Para este operador se realizaron multiples cambios pero debido a distintos errores se opto por dejarlo de base
+  Node *pNode = getNode();
+  Node *pNode1 = pNode;
+    if(pNode->m_pChild[0]) 
+    {
+      pNode = pNode->m_pChild[0];
+      setNode(pNode);
+      return *this; 
+    } else {
+      Node *pParent = pNode->getParent();
+      while(pParent && pParent->m_pChild[1] == pNode)
+      { pNode = pParent;
+        pParent = pParent->getParent();    }
+        if(pParent && pParent->m_pChild[1] == pNode) 
+      { setNode(pParent);
+      return *this; }
+     setNode(nullptr);
+    return *this;}
+    }
+
+#endif //Maizo Diego
