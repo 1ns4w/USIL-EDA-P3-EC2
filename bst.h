@@ -26,8 +26,10 @@ public:
     class Iterator
     {
           Node *m_pNode;
-          const Node *getNode() { return m_pNode;  }
-          void setNode(const Node *pNode) { m_pNode = pNode;  }
+          //Se cambia el tipo de retorno de la funcion getNode de const Node* a Node* (no constante), pues esta funcion se asignaba a punteros de Node no constantes y eso causaba error.
+          Node *getNode() { return m_pNode;  }
+          //Se cambia el tipo de parametro de la funcion setNode de const Node* a Node* (no constante), pues esta funcion se utiliza para establecer el puntero m_pNode, el cual no es tipo constante y causaba error.
+          void setNode(Node *pNode) { m_pNode = pNode;  }
       public:    
           Iterator(Node *pNode=nullptr): m_pNode(pNode) {};
           Iterator(Iterator &other) : m_pNode(other.getNode())  {}
@@ -66,11 +68,14 @@ public:
     void Preorder()
     { PreOrden(m_pRoot, 0, 1, "", "",cout);  }
     
+    //se cambia el segundo y tercer parametro de 1, 0 a 0,1 respectivamente 
+    //en las llamadas a los metodos privados PostOrden y Inorder en sus respectivas funciones publicas
+    //esos parametros indican el indice del nodo que se visita segun el recorrido (0 : izquierdo, 1: derecho)
     void Postorder()
-    { PostOrden(m_pRoot, 1, 0, "", "",cout);  }
+    { PostOrden(m_pRoot, 0, 1, "", "",cout);  }
 
     void Inorder()
-    { InOrden(m_pRoot, 1, 0, "", "",cout); }
+    { InOrden(m_pRoot, 0, 1, "", "",cout);  cout<<endl;}
     
 private:
     void internal_insert(Node *&rParentPointer, Node *rParentNode, const T &dato); //Maizo agregado const
