@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 int main()
 {
   CBinaryTree<T1> bst;
@@ -23,7 +24,13 @@ int main()
   cout << "Inorder ..." << endl;
   bst.Inorder();
 
-  CBinaryTree<T1>::Iterator iter = bst.begin();
-  for(; iter != bst.end(); iter++)
+  //Correccion Daniel Chicana
+  //Error: invalids operands to binary expression
+  //Se define cada iterador por separado para evitar el error del compilador
+  //que los considera tipos no compatibles
+  auto iter = bst.begin(), end = bst.end();
+  //Se pone delante el operador de incremento (++)
+  //No era considerado por el compilador la definicion de este operador en la clase Iterator 
+  for(; iter != end; ++iter)
     cout << *iter << endl;
 }
